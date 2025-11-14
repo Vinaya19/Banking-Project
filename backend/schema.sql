@@ -1,0 +1,27 @@
+CREATE DATABASE IF NOT EXISTS bankdb;
+USE bankdb;
+
+CREATE TABLE customers(
+    id INT AUTO_INCREMENT PRIMARY_KEY,
+    name VARCHAR(120) NOT NULL,
+    email VARCHAR(120) UNIQUE NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE accounts(
+    id INT AUTO_INCREMENT PRIMARY_KEY,
+    account_number VARCHAR(30) UNIQUE NOT NULL,
+    customer_id INT NOT NULL.
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN_KEY(customer_id) REFERENCES customers(id)
+);
+
+CREATE TABLE transactions(
+    id INT AUTO_INCREMENT PRIMARY_KEY,
+    account_id INT NOT NULL,
+    type VARCHAR(20) NOT NULL,
+    amount DOUBLE NOT NULL,
+    description VARCHAR(255),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN_KEY(account_id) REFERENCES accounts(id) 
+);
