@@ -78,5 +78,7 @@ class BankService:
     @staticmethod
     def get_transactions(account_id: int, limit: int = 50):
         return Transaction.query.filter_by(account_id=account_id).order_by(Transaction.created_at.desc()).limit(limit).all()
-
-
+    
+    @staticmethod
+    def get_customer_accounts(customer_id: int):
+        return Account.query.filter_by(customer_id=customer_id)
