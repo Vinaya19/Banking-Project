@@ -11,6 +11,11 @@ def create_customer():
     cust = BankService.create_customer(data['name'], data['email'])
     return jsonify(cust.to_dict()), 201
 
+@bp.route('/customers/<int:customer_id>/accounts', methods=['GET'])
+def get_customer_accounts(customer_id):
+    accounts = BankService.get_customer_accounts(customer_id)
+    return jsonify([acct.to_dict() for acct in accounts]), 200
+
 @bp.route('/accounts', methods=['POST'])
 def create_account():
     data = request.json
