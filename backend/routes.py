@@ -9,7 +9,20 @@ bp = Blueprint('api', __name__)
 def create_customer():
     data = request.json
     cust = BankService.create_customer(data['name'], data['email'])
-    return jsonify(cust.to_dict()), 201
+    response = jsonify(cust.to_dict())
+    return response, 201
+
+@bp.route('/auth/login', methods=['POST'])
+def login():
+    data = request.json
+    email = (data.get('email') or '').strip().lower()
+    name = (data.get('name') or '').strip().lower()
+
+    if not email:
+        return jsonify({"message": "Email is required"}), 400
+
+    cust = BankService.get_or_create_customer(email, name)
+    return jsonify(cust.to_dict()), 200
 
 @bp.route('/customers/<int:customer_id>/accounts', methods=['GET'])
 def get_customer_accounts(customer_id):

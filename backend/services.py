@@ -1,5 +1,6 @@
 from models import db, Customer, Account, Transaction
-#from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError
+
 import random
 
 class BankService:
@@ -10,6 +11,24 @@ class BankService:
         db.session.add(cust)
         db.session.commit()
         return cust
+    
+    @staticmethod
+    def get_or_create_customer(email:str, name:str) -> Customer:
+        existingCust = Customer.query.filter_by(email=email).first()
+
+        if existingCust:
+            return existingCust
+        
+        cust = Customer(name=(name or email.split("@")[0] or "User").strip(), email=email)
+        db.session.add(cust)
+
+        try:
+            db.session.commit()
+            return cust
+        except IntegrityError:
+            db.session.rollback
+            return Customer.query.filter_by(email=email).first()
+
     
     @staticmethod
     def create_account(customer_id: int, initial_deposit: float = 0.0) -> Account:
